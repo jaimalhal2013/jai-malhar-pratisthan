@@ -6,6 +6,10 @@ plugins {
 
 android {
     namespace = "org.jaimalhar.pratisthan"
+compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
     compileSdk = 35
     defaultConfig {
         applicationId = "org.jaimalhar.pratisthan"
@@ -15,6 +19,9 @@ android {
         versionName = "0.1.0"
     }
     buildFeatures { compose = true }
+kotlinOptions {
+        jvmTarget = "17"
+    }
 }
 
 dependencies {
