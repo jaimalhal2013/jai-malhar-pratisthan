@@ -1,6 +1,11 @@
 package org.jaimalhar.pratisthan
 
 import android.os.Bundle
+import android.app.Activity
+import android.content.Intent
+import android.speech.RecognizerIntent
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
@@ -28,8 +33,23 @@ private val Blue = Color(0xFF07579A)
 private val PaleBlue = Color(0xFFEAF4FF)
 private val Ink = Color(0xFF172B3A)
 
+private const val SPEECH_REQUEST_CODE = 1001
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+
+    setContent {
+        MaterialTheme(
+            colorScheme = lightColorScheme(
+                primary = Blue,
+                secondary = Color(0xFF2B78C5),
+                background = Color.White
+            )
+        ) {
+            AppRoot()
+        }
+    }
+} {
         super.onCreate(savedInstanceState)
         setContent { MaterialTheme(colorScheme = lightColorScheme(primary = Blue, secondary = Color(0xFF2B78C5), background = Color.White)) { AppRoot() } }
     }
@@ -149,9 +169,34 @@ private fun AddDonationScreen(collector: String, onSave: (Donation) -> Unit) {
     var mode by remember { mutableStateOf("Cash") }
     var status by remember { mutableStateOf("Pending") }
     var error by remember { mutableStateOf("") }
+    val speechLauncher = rememberLauncherForActivityResult(
+    contract = ActivityResultContracts.StartActivityForResult()
+) { result ->
+    if (result.resultCode == Activity.RESULT_OK) {
+        val spokenText = result.data
+            ?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
+            ?.firstOrNull()
+
+        if (!spokenText.isNullOrBlank()) {
+            name = spokenText
+            error = ""
+        }
+    }
+}
     LazyColumn(Modifier.fillMaxSize().padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
         item { Text("New Donation", fontSize = 23.sp, fontWeight = FontWeight.Bold, color = Ink) }
-        item { OutlinedTextField(name, { name = it }, label = { Text("Payer Name") }, singleLine = true, modifier = Modifier.fillMaxWidth(), trailingIcon = { TextButton(onClick = { error = "Voice input will be connected in the next implementation stage." }) { Text("🎙") } }) }
+        item { OutlinedTextField(name, { name = it }, label = { Text("Payer Name") }, singleLine = true, modifier = Modifier.fillMaxWidth(), trailingIcon = { TextButton(onClick = {
+    val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
+        putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+        putExtra(RecognizerIntent.EXTRA_LANGUAGE, "mr-IN")
+        putExtra(RecognizerIntent.EXTRA_PROMPT, "देणगीदाराचे नाव बोला")
+    }
+    try {
+        speechLauncher.launch(intent)
+    } catch (e: Exception) {
+        error = "Speech recognition is unavailable on this phone."
+    }
+}) { Text("🎙") }
         item { OutlinedTextField(mobile, { mobile = it.filter(Char::isDigit).take(10) }, label = { Text("Mobile Number") }, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone), singleLine = true, modifier = Modifier.fillMaxWidth()) }
         item { OutlinedTextField(amount, { amount = it.filter { c -> c.isDigit() || c == '.' }.take(10) }, label = { Text("Amount (₹)") }, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal), singleLine = true, modifier = Modifier.fillMaxWidth()) }
         item { Text("Payment Method", fontWeight = FontWeight.SemiBold, color = Ink) }
