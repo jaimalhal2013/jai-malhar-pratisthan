@@ -213,6 +213,8 @@ private fun LoginScreen(
     onUsername: (String) -> Unit,
     password: String,
     onPassword: (String) -> Unit,
+    errorMessage: String,
+    isLoading: Boolean,
     onLogin: () -> Unit
 ) {
     Column(
