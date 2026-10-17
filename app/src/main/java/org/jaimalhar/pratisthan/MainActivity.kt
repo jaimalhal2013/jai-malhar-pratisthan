@@ -109,8 +109,6 @@ private fun AppRoot() {
                         ?: "Login failed. Please check your details."
             }
         }
-    }
-}
     } else {
         Scaffold(
             topBar = {
