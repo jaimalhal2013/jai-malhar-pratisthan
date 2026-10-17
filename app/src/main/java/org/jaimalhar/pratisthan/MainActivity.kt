@@ -72,6 +72,8 @@ private fun AppRoot() {
     var screen by remember { mutableStateOf("Dashboard") }
     var morePage by remember { mutableStateOf<String?>(null) }
     var signedInName by remember { mutableStateOf("") }
+    var errorMessage by remember { mutableStateOf("") }
+    var isLoading by remember { mutableStateOf(false) }
 
     val donations = remember { mutableStateListOf<Donation>() }
 
