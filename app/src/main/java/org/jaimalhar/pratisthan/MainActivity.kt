@@ -82,6 +82,8 @@ private fun AppRoot() {
             username = username,
             onUsername = { username = it },
             password = password,
+            errorMessage = errorMessage,
+            isLoading = isLoading,
             onPassword = { password = it },
             onLogin = {
                 if (username.isNotBlank() && password.isNotBlank()) {
