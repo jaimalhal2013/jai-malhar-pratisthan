@@ -67,6 +67,7 @@ private fun AppRoot() {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var loggedIn by remember { mutableStateOf(false) }
+    val auth = remember { FirebaseAuth.getInstance() }
     var role by remember { mutableStateOf("Collector") }
     var screen by remember { mutableStateOf("Dashboard") }
     var morePage by remember { mutableStateOf<String?>(null) }
