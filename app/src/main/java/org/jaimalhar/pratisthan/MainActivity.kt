@@ -86,19 +86,31 @@ private fun AppRoot() {
             isLoading = isLoading,
             onPassword = { password = it },
             onLogin = {
-                if (username.isNotBlank() && password.isNotBlank()) {
-                    signedInName = username.trim()
-                    role = if (username.trim().equals("admin", true)) {
-                        "Super Admin"
-                    } else {
-                        "Collector"
-                    }
-                    loggedIn = true
-                    screen = "Dashboard"
-                    morePage = null
-                }
+    errorMessage = ""
+
+    if (username.isBlank() || password.isBlank()) {
+        errorMessage = "Please enter your email and password."
+    } else {
+        isLoading = true
+
+        auth.signInWithEmailAndPassword(
+            username.trim(),
+            password
+        ).addOnCompleteListener { task ->
+            isLoading = false
+
+            if (task.isSuccessful) {
+                errorMessage =
+                    "Signed in, but approval verification is not connected yet. Access remains blocked."
+                auth.signOut()
+            } else {
+                errorMessage =
+                    task.exception?.localizedMessage
+                        ?: "Login failed. Please check your details."
             }
-        )
+        }
+    }
+}
     } else {
         Scaffold(
             topBar = {
@@ -276,11 +288,20 @@ private fun LoginScreen(
                 )
 
                 Button(
-                    onClick = onLogin,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text("Login")
-                }
+    onClick = onLogin,
+    enabled = !isLoading,
+    modifier = Modifier.fillMaxWidth()
+) {
+    Text(if (isLoading) "Signing in..." else "Login")
+}
+
+if (errorMessage.isNotBlank()) {
+    Text(
+        text = errorMessage,
+        color = Color.Red,
+        fontSize = 13.sp
+    )
+}
 
                 Text(
                     "Prototype login only. Secure authentication is not connected.",
