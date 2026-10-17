@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "131288507920",
+    "project_id": "jai-malhar-pratisthan",
+    "storage_bucket": "jai-malhar-pratisthan.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:131288507920:android:4664c8679d5d61fea64c95",
+        "android_client_info": {
+          "package_name": "org.jaimalhar.partisthan"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "131288507920-tl3ireu8inprg7tqun72j87evmk8ok9d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDqEwLvt51EmKprpUGOODkVBzCVlLHWbqI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "131288507920-tl3ireu8inprg7tqun72j87evmk8ok9d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
